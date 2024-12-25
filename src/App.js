@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Login from './pages/Login';
+import CreateAccount from './pages/CreateAccount';
+import ForgotPassword from './pages/ForgotPassword';
+import Dashboard from './pages/Dashboard';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+  return React.createElement(
+    Router,
+    null,
+    React.createElement(
+      Routes,
+      null,
+      React.createElement(Route, { path: '/login', element: React.createElement(Login) }),
+      React.createElement(Route, { path: '/create-account', element: React.createElement(CreateAccount) }),
+      React.createElement(Route, { path: '/forgot-password', element: React.createElement(ForgotPassword) }),
+      React.createElement(Route, { path: '/dashboard', element: React.createElement(Dashboard) })
+    )
   );
 }
 
