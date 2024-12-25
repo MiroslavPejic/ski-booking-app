@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import supabase from '../supabaseClient';
 import backgroundImage from '../assets/ski_background.png';
 
-function Login() {
+function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -71,4 +71,4 @@ function Login() {
   );
 }
 
-export default Login;
+export default LoginPage;
