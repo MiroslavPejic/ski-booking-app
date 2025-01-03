@@ -1,17 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../supabaseClient';
 import DatePicker from 'react-datepicker';
+import PaginatedBookings from '../components/PaginatedBookings';
 import 'react-datepicker/dist/react-datepicker.css';
 
 function Dashboard() {
   const [user, setUser] = useState(null);
-  const [lessonDate, setLessonDate] = useState(null); // Store the date picked
+  const [lessonDate, setLessonDate] = useState(null);
   const [lessonType, setLessonType] = useState('beginner');
   const [location, setLocation] = useState('');
   const [bookings, setBookings] = useState([]);
   const [error, setError] = useState('');
+  const [notification, setNotification] = useState({ visible: false, message: '', isSuccess: true });
 
-  // Fetch the logged-in user
+  const fetchBookings = async () => {
+    const { data, error } = await supabase
+      .from('ski_lessons')
+      .select('*')
+      .eq('user_id', user.id);
+
+    if (error) {
+      setError(error.message);
+    } else {
+      setBookings(data);
+    }
+  };
+
   useEffect(() => {
     const fetchSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -20,42 +34,26 @@ function Dashboard() {
 
     fetchSession();
 
-    // Listen for session changes
-    const authListener = supabase.auth.onAuthStateChange((event, session) => {
+    supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user);
     });
   }, []);
 
-  // Fetch the user's bookings when logged in
   useEffect(() => {
     if (user) {
-      const fetchBookings = async () => {
-        const { data, error } = await supabase
-          .from('ski_lessons')
-          .select('*')
-          .eq('user_id', user.id);
-        
-        if (error) {
-          setError(error.message);
-        } else {
-          setBookings(data);
-        }
-      };
-
       fetchBookings();
     }
-  }, [user]); // Fetch bookings whenever user changes
+  }, [user]);
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
 
     if (!lessonDate || !lessonType) {
-      setError('Please fill out all fields.');
+      setNotification({ visible: true, message: 'Please fill out all fields.', isSuccess: false });
       return;
     }
 
     try {
-      // Insert new booking
       const { data, error } = await supabase
         .from('ski_lessons')
         .insert([
@@ -67,31 +65,45 @@ function Dashboard() {
           },
         ]);
 
-        console.log('data here is: ', data);
-
-      if (error) {
-        setError(error.message);
+      if (error != null) {
+        setNotification({ visible: true, message: error.message, isSuccess: false });
       } else {
-        // Successfully created booking, refresh the list
-        setBookings([...bookings, data[0]]);
+        if(data != null) {
+          setBookings([...bookings, data[0]]);
+        }
+
         setLessonDate(null);
-        setLessonType('');
+        setLessonType('beginner');
         setLocation('');
+        setNotification({ visible: true, message: 'Booking created successfully!', isSuccess: true });
       }
     } catch (e) {
-      setError('Error creating booking');
-      console.log(e);
+      setNotification({ visible: true, message: 'Error creating booking.', isSuccess: false });
+    } finally {
+      fetchBookings();
     }
+
+    setTimeout(() => setNotification({ visible: false, message: '', isSuccess: true }), 5000);
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 pt-24">
       <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
 
+      {notification.visible && (
+        <div
+          className={`w-full p-4 text-center mb-4 ${
+            notification.isSuccess ? 'bg-green-500 text-white' : 'bg-red-500 text-white'
+          }`}
+        >
+          {notification.message}
+        </div>
+      )}
+
       {user ? (
-        <>
-          {/* Booking Form */}
-          <div className="mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* Booking Form in the first column */}
+          <div className="w-full lg:col-span-1">
             <h2 className="text-2xl font-semibold mb-4">Book a Ski Lesson</h2>
             <form onSubmit={handleBookingSubmit}>
               <div className="mb-4">
@@ -101,8 +113,8 @@ function Dashboard() {
                   onChange={(date) => setLessonDate(date)}
                   showTimeSelect
                   dateFormat="Pp"
-                  minDate={new Date()} // Disable past dates
-                  timeIntervals={60} // Time slots at 1-hour intervals
+                  minDate={new Date()}
+                  timeIntervals={60}
                   className="w-full p-3 border border-gray-300 rounded"
                   placeholderText="Select lesson date"
                   required
@@ -136,24 +148,34 @@ function Dashboard() {
             </form>
           </div>
 
-          {/* Display Bookings */}
-          <div>
-            <h2 className="text-2xl font-semibold mb-4">Your Bookings</h2>
+          {/* Current Bookings in the second column */}
+          <div className="w-full lg:col-span-1">
             {bookings.length > 0 ? (
-              <ul className="space-y-4">
-                {bookings.map((booking) => (
-                  <li key={booking.id} className="p-4 border rounded shadow">
-                    <p><strong>Date:</strong> {new Date(booking.lesson_date).toLocaleString()}</p>
-                    <p><strong>Type:</strong> {booking.lesson_type}</p>
-                    <p><strong>Location:</strong> {booking.location || 'Not specified'}</p>
-                  </li>
-                ))}
-              </ul>
+              <div className="space-y-6">
+                <div>
+                  <h3 className="text-xl font-semibold mb-3">Current Bookings</h3>
+                  <PaginatedBookings
+                    bookings={bookings.filter(booking => new Date(booking.lesson_date) >= new Date())}
+                    itemsPerPage={3}
+                    title="Current Bookings"
+                  />
+                </div>
+              </div>
             ) : (
               <p>You have no bookings yet.</p>
             )}
           </div>
-        </>
+
+          {/* Past Bookings in the third column for large screens */}
+          <div className="w-full lg:col-span-1">
+            <h3 className="text-xl font-semibold mb-3">Past Bookings</h3>
+            <PaginatedBookings
+              bookings={bookings.filter(booking => new Date(booking.lesson_date) < new Date())}
+              itemsPerPage={3}
+              title="Past Bookings"
+            />
+          </div>
+        </div>
       ) : (
         <p>Please log in to view and make bookings.</p>
       )}
