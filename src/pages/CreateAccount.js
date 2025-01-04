@@ -1,7 +1,7 @@
 // src/pages/CreateAccount.js
 import React, { useState } from 'react';
 import supabase from '../supabaseClient';
-import backgroundImage from '../assets/ski_background.png';
+import backgroundImage from '../assets/ski_background_1.png';
 
 function CreateAccount() {
   const [email, setEmail] = useState('');
