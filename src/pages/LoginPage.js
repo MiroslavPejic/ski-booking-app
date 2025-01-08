@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import supabase from '../supabaseClient';
-import backgroundImage from '../assets/ski_background_1.webp';
+import backgroundImage from '../assets/ski_background_1.jpg';
 
 function LoginPage() {
   const [email, setEmail] = useState('');

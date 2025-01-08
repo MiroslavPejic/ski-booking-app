@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import supabase from '../supabaseClient';
 
-import backgroundImage from '../assets/ski_background_1.webp';
+import backgroundImage from '../assets/ski_background_1.jpg';
 
 function ForgotPassword() {
   const [email, setEmail] = useState('');

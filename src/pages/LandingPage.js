@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient'; // Ensure correct path for your supabase client
-import backgroundImage1 from '../assets/ski_background_1.webp';
+import backgroundImage1 from '../assets/ski_background_1.jpg';
 import backgroundImage2 from '../assets/ski_background_2.jpg';
-import backgroundImage3 from '../assets/ski_background_3.webp';
+import backgroundImage3 from '../assets/ski_background_3.jpg';
 
 function LandingPage() {
   const [user, setUser] = useState(null);
