@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import supabase from '../supabaseClient'; // Ensure correct path for your supabase client
-import backgroundImage1 from '../assets/ski_background_1.png';
-import backgroundImage2 from '../assets/ski_background_2.webp';
-import backgroundImage3 from '../assets/ski_background_3.jpeg';
+import backgroundImage1 from '../assets/ski_background_1.webp';
+import backgroundImage2 from '../assets/ski_background_2.jpg';
+import backgroundImage3 from '../assets/ski_background_3.webp';
 
 function LandingPage() {
   const [user, setUser] = useState(null);
@@ -17,6 +17,25 @@ function LandingPage() {
   ];
 
   useEffect(() => {
+    const fetchSession = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        setUser(session.user);
+      }
+    };
+
+    fetchSession();
+
+    const authListener = supabase.auth.onAuthStateChange((event, session) => {
+      if (session) {
+        setUser(session.user);
+      } else {
+        setUser(null);
+      }
+    });
+  }, [])
+
+  useEffect(() => {
     const handleScroll = (event) => {
       event.preventDefault(); // Prevent default scroll behavior
 
@@ -28,23 +47,6 @@ function LandingPage() {
         // Scroll up
         setCurrentSection((prev) => Math.max(prev - 1, 0));
       }
-
-      const fetchSession = async () => {
-        const { data: { session } } = await supabase.auth.getSession();
-        if (session) {
-          setUser(session.user);
-        }
-      };
-  
-      fetchSession();
-  
-      const authListener = supabase.auth.onAuthStateChange((event, session) => {
-        if (session) {
-          setUser(session.user);
-        } else {
-          setUser(null);
-        }
-      });
     };
 
     window.addEventListener('wheel', handleScroll, { passive: false });
