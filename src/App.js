@@ -9,6 +9,10 @@ import Dashboard from './pages/Dashboard/Dashboard';
 import ProfilePage from './pages/ProfilePage'
 import NavigationBar from './components/NavigationBar';
 
+// Admin
+import AdminUsers from './pages/Admin/AdminUsers';
+import AdminBookings from './pages/Admin/AdminBookings';
+
 function App() {
   return (
     <Router>
@@ -21,6 +25,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<ProfilePage/>} />
+          <Route path="/admin/users" element={<AdminUsers/>} />
+          <Route path="/admin/bookings" element={<AdminBookings/>} />
         </Routes>
       </div>
     </Router>
