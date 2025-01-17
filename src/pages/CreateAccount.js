@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import supabase from '../supabaseClient';
 import backgroundImage from '../assets/ski_background_1.jpg';
+import { signUpUser, insertUserProfile } from '../Services/authService';
 
 function CreateAccount() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [name, setName] = useState(''); // Add state for the user's name
+  const [name, setName] = useState('');
   const [role, setRole] = useState('customer'); // Default role is 'customer'
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -14,7 +14,6 @@ function CreateAccount() {
   const handleCreateAccount = async (e) => {
     e.preventDefault();
 
-    // Basic password match check
     if (password !== confirmPassword) {
       setError("Passwords don't match!");
       return;
@@ -22,10 +21,7 @@ function CreateAccount() {
 
     try {
       // Step 1: Create the user using Supabase Auth
-      const { user, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      const { user, error: signUpError } = await signUpUser(email, password);
 
       if (signUpError) {
         setError(signUpError.message);
@@ -33,15 +29,7 @@ function CreateAccount() {
       }
 
       // Step 2: Insert the user profile into the profiles table
-      const { data, error: profileError } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: user.id, // Use the user's ID from Supabase Auth
-            role: role, // Set the role (e.g., 'admin', 'instructor', 'customer')
-            name: name, // User's name
-          }
-        ]);
+      const { error: profileError } = await insertUserProfile(user.id, role, name);
 
       if (profileError) {
         setError(profileError.message);
@@ -50,14 +38,16 @@ function CreateAccount() {
 
       // Step 3: Show success message
       setSuccessMessage('Account created successfully! Please check your email to verify.');
-
     } catch (err) {
       setError('Something went wrong. Please try again.');
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-cover bg-center" style={{ backgroundImage: `url(${backgroundImage})` }}>
+    <div
+      className="flex items-center justify-center min-h-screen bg-cover bg-center"
+      style={{ backgroundImage: `url(${backgroundImage})` }}
+    >
       <div className="bg-white p-8 rounded-lg shadow-lg w-96 max-w-md opacity-90">
         <div className="text-center mb-4">
           <h1 className="text-3xl font-bold text-blue-700">Create Account</h1>
