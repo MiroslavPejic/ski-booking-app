@@ -11,9 +11,8 @@ function AdminBookings() {
     setLoading(true);
     const { data, error } = await supabase
       .from('ski_lessons')
-      .select('id, user_id, lesson_date, lesson_type, location')
+      .select('id, user_id, lesson_date, lesson_time, lesson_type, location_id, instructor_id, profiles:instructor_id(name), locations(name)')
       .order('lesson_date', { ascending: true });
-
     if (error) {
       setError(error.message);
     } else {
@@ -42,10 +41,23 @@ function AdminBookings() {
     }
   };
 
-  const handleUpdate = async (bookingId, newLocation) => {
+  const handleUpdate = async (bookingId, newLocationId) => {
     const { error } = await supabase
       .from('ski_lessons')
-      .update({ location: newLocation })
+      .update({ location_id: newLocationId })
+      .match({ id: bookingId });
+
+    if (error) {
+      setError(error.message);
+    } else {
+      fetchBookings();
+    }
+  };
+
+  const handleUpdateInstructor = async (bookingId, newInstructorId) => {
+    const { error } = await supabase
+      .from('ski_lessons')
+      .update({ instructor_id: newInstructorId })
       .match({ id: bookingId });
 
     if (error) {
@@ -69,9 +81,10 @@ function AdminBookings() {
             <thead>
               <tr className="bg-gray-200 text-left">
                 <th className="px-4 py-2">Lesson Date</th>
+                <th className="px-4 py-2">Lesson Time</th>
                 <th className="px-4 py-2">Lesson Type</th>
                 <th className="px-4 py-2">Location</th>
-                <th className="px-4 py-2">User ID</th>
+                <th className="px-4 py-2">Instructor</th>
                 <th className="px-4 py-2">Actions</th>
               </tr>
             </thead>
@@ -79,16 +92,10 @@ function AdminBookings() {
               {bookings.map((booking) => (
                 <tr key={booking.id} className="border-b">
                   <td className="px-4 py-2">{new Date(booking.lesson_date).toLocaleString()}</td>
+                  <td className="px-4 py-2">{booking.lesson_time}</td>
                   <td className="px-4 py-2">{booking.lesson_type}</td>
-                  <td className="px-4 py-2">
-                    <input
-                      type="text"
-                      value={booking.location}
-                      onChange={(e) => handleUpdate(booking.id, e.target.value)}
-                      className="w-full p-2 border border-gray-300 rounded"
-                    />
-                  </td>
-                  <td className="px-4 py-2">{booking.user_id}</td>
+                  <td className="px-4 py-2">{booking.locations.name}</td>
+                  <td className="px-4 py-2">{booking.profiles.name}</td>
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleDelete(booking.id)}
