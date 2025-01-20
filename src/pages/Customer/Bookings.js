@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import supabase from '../../supabaseClient';
+import { fetchBookings } from '../../Services/bookingsService'; // Import the service
 
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
@@ -11,7 +12,7 @@ const UserBookings = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    const fetchBookings = async () => {
+    const fetchUserBookings = async () => {
       setLoading(true);
       setError(null);
 
@@ -27,26 +28,10 @@ const UserBookings = () => {
           return;
         }
 
-        // Fetch bookings for the logged-in user with associated instructor, location, and time
-        const { data, error } = await supabase
-        .from('ski_lessons')
-        .select(`
-            id,
-            lesson_date,
-            lesson_time,
-            lesson_type,
-            location_id,
-            instructor_id,
-            profiles:instructor_id(name), 
-            locations(name)
-        `)
-        .eq('user_id', user.id)
-        .order('lesson_date', { ascending: true });
+        // Fetch bookings using the service
+        const bookingsData = await fetchBookings(user.id);
 
-        if (error) throw error;
-
-        console.log('data: ', data);
-        setBookings(data);
+        setBookings(bookingsData);
       } catch (err) {
         setError('Failed to fetch bookings.');
       } finally {
@@ -54,7 +39,7 @@ const UserBookings = () => {
       }
     };
 
-    fetchBookings();
+    fetchUserBookings();
   }, []);
 
   // Handle page change
