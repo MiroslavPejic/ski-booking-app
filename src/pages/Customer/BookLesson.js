@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import supabase from '../../supabaseClient';
+import * as bookingService from '../../Services/bookingsService';
 
 function BookLesson() {
   const [locationError, setLocationError] = useState('');
@@ -9,13 +10,13 @@ function BookLesson() {
 
   const [user, setUser] = useState(null);
   const [lessonDate, setLessonDate] = useState(null);
-  const [lessonTime, setLessonTime] = useState(null); // New state for lesson time
+  const [lessonTime, setLessonTime] = useState(null);
   const [lessonType, setLessonType] = useState('beginner');
   const [location, setLocation] = useState('');
   const [selectedInstructor, setSelectedInstructor] = useState(null);
   const [locations, setLocations] = useState([]);
   const [instructors, setInstructors] = useState([]);
-  const [instructorBookings, setInstructorBookings] = useState([]); // To store instructor bookings
+  const [instructorBookings, setInstructorBookings] = useState([]);
   const [notification, setNotification] = useState({ visible: false, message: '', isSuccess: true });
 
   useEffect(() => {
@@ -30,7 +31,7 @@ function BookLesson() {
   useEffect(() => {
     if (location) {
       fetchInstructors(location);
-      setSelectedInstructor(null); // Reset instructor when location changes
+      setSelectedInstructor(null);
     }
   }, [location]);
 
@@ -46,50 +47,31 @@ function BookLesson() {
   };
 
   const fetchLocations = async () => {
-    const { data, error } = await supabase
-      .from('locations')
-      .select('*');
-
-    if (error) {
+    try {
+      const data = await bookingService.fetchLocations();
+      setLocations(data);
+    } catch (error) {
       setLocationError(error.message);
-    } else {
-      setLocations(data || []);
     }
   };
 
   const fetchInstructors = async (locationId) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('id, name')
-      .eq('location_id', locationId)
-      .eq('role', 'instructor')
-      .not('is_deleted', 'eq', true);
-
-    if (error) {
+    try {
+      const data = await bookingService.fetchInstructors(locationId);
+      setInstructors(data);
+    } catch (error) {
       setInstructorError(error.message);
-    } else {
-      setInstructors(data || []);
     }
   };
 
   const fetchInstructorBookings = async (instructorId, date) => {
-    // Convert JavaScript Date to a PostgreSQL-friendly format (YYYY-MM-DD)
-    const formattedDate = date.toISOString().split('T')[0]; // "YYYY-MM-DD"
-  
-    const { data, error } = await supabase
-      .from('ski_lessons')
-      .select('lesson_time')
-      .eq('instructor_id', instructorId)
-      .eq('lesson_date', formattedDate);  // Use formatted date without time component
-  
-    console.log('selected instructor: ', selectedInstructor);
-    console.log('data:' ,data);
-    if (error) {
+    try {
+      const data = await bookingService.fetchInstructorBookings(instructorId, date);
+      setInstructorBookings(data);
+    } catch (error) {
       console.error('Error fetching instructor bookings:', error.message);
-    } else {
-      setInstructorBookings(data || []);
     }
-  };  
+  };
 
   const handleBookingSubmit = async (e) => {
     e.preventDefault();
@@ -100,38 +82,20 @@ function BookLesson() {
     }
 
     try {
-      const { data, error } = await supabase
-        .from('ski_lessons')
-        .insert([
-          {
-            user_id: user.id,
-            lesson_date: lessonDate,
-            lesson_time: lessonTime,  // Saving the selected time
-            lesson_type: lessonType,
-            location_id: location,
-            instructor_id: selectedInstructor,
-          },
-        ]);
-
-      if (error != null) {
-        setNotification({ visible: true, message: error.message, isSuccess: false });
-      } else {
-        setLessonDate(null);
-        setLessonTime(null);
-        setLessonType('beginner');
-        setLocation('');
-        setSelectedInstructor(null);
-        setNotification({ visible: true, message: 'Booking created successfully!', isSuccess: true });
-      }
-    } catch (e) {
+      await bookingService.createBooking(user.id, lessonDate, lessonTime, lessonType, location, selectedInstructor);
+      setLessonDate(null);
+      setLessonTime(null);
+      setLessonType('beginner');
+      setLocation('');
+      setSelectedInstructor(null);
+      setNotification({ visible: true, message: 'Booking created successfully!', isSuccess: true });
+    } catch (error) {
       setNotification({ visible: true, message: 'Error creating booking.', isSuccess: false });
-    } finally {
     }
 
     setTimeout(() => setNotification({ visible: false, message: '', isSuccess: true }), 5000);
   };
 
-  // Function to check if a time is already booked by the selected instructor
   const isTimeBooked = (time) => {
     return instructorBookings.some((booking) => booking.lesson_time === time);
   };
