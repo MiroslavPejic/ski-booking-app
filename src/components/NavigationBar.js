@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import supabase from '../supabaseClient'; // Ensure to import the supabase client
+import { Link, useNavigate } from 'react-router-dom';
+import supabase from '../supabaseClient';
 
 function NavigationBar() {
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Fetch session on mount and check if the user is logged in
   useEffect(() => {
     const fetchSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
@@ -15,10 +15,8 @@ function NavigationBar() {
       }
     };
 
-    // Fetch session immediately when the component mounts
     fetchSession();
 
-    // Listen for changes in authentication state (login/logout)
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (session) {
         setUser(session.user);
@@ -34,6 +32,7 @@ function NavigationBar() {
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
+    navigate('/');
   };
 
   return (
@@ -93,20 +92,14 @@ function NavigationBar() {
         } w-full md:flex md:w-auto md:items-center space-y-4 md:space-y-0 md:space-x-6 text-lg`}
       >
         {user && (
-          <Link
-            to="/dashboard"
-            className="hover:bg-blue-700 px-4 py-2 rounded transition duration-300 block md:inline"
-          >
-            Dashboard
-          </Link>
-        )}
-        {user && (
-          <Link
-            to="/profile"
-            className="hover:bg-blue-700 px-4 py-2 rounded transition duration-300 block md:inline"
-          >
-            Profile
-          </Link>
+          <>
+            <Link
+              to="/dashboard"
+              className="hover:bg-blue-700 px-4 py-2 rounded transition duration-300 block md:inline"
+            >
+              Dashboard
+            </Link>
+          </>
         )}
         {!user ? (
           <Link

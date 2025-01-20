@@ -4,7 +4,6 @@ import * as userService from '../../Services/userService';
 
 function AdminUsers() {
   const [users, setUsers] = useState([]);
-  const [locations, setLocations] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -18,9 +17,7 @@ function AdminUsers() {
     try {
       setLoading(true);
       const usersData = await userService.fetchUsers();
-      const locationsData = await userService.fetchLocations();
       setUsers(usersData);
-      setLocations(locationsData);
     } catch (error) {
       setError(error.message);
     } finally {

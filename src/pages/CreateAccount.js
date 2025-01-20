@@ -7,7 +7,6 @@ function CreateAccount() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [name, setName] = useState('');
-  const [role, setRole] = useState('customer'); // Default role is 'customer'
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -29,7 +28,7 @@ function CreateAccount() {
       }
 
       // Step 2: Insert the user profile into the profiles table
-      const { error: profileError } = await insertUserProfile(user.id, role, name);
+      const { error: profileError } = await insertUserProfile(user.id, 'customer', name);
 
       if (profileError) {
         setError(profileError.message);
