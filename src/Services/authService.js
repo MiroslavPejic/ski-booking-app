@@ -1,15 +1,25 @@
 import supabase from '../supabaseClient';
 
 /**
- * Signs up a new user using Supabase Auth.
- * @param {string} email - The user's email.
+ * Sign up a user with email and password.
+ * @param {string} email - The user's email address.
  * @param {string} password - The user's password.
- * @returns {object} - The user and any errors that occurred.
+ * @returns {object} - An object containing user data or an error message.
  */
-export const signUpUser = async (email, password) => {
-  const { user, error } = await supabase.auth.signUp({ email, password });
-  return { user, error };
-};
+export async function signUpUser(email, password) {
+  const { data, error } = await supabase.auth.signUp({ email, password });
+
+  if (error) {
+    return { user: null, error: error.message };
+  }
+
+  return {
+    user: data.user,
+    message: data.user
+      ? 'User created successfully!'
+      : 'Check your email to confirm your account.',
+  };
+}
 
 /**
  * Inserts a new user profile into the profiles table.
@@ -19,8 +29,17 @@ export const signUpUser = async (email, password) => {
  * @returns {object} - The data and any errors that occurred.
  */
 export const insertUserProfile = async (userId, role, name) => {
+  console.log(userId, role, name)
   const { data, error } = await supabase
     .from('profiles')
-    .insert([{ id: userId, role, name }]);
+    .insert([
+      { 
+        id: userId, 
+        role: role, 
+        name: name 
+      }]);
+
+  console.log('data: ', data);
+  console.log('Error: ', error);
   return { data, error };
 };

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import backgroundImage from '../assets/ski_background_1.jpg';
 import { signUpUser, insertUserProfile } from '../Services/authService';
+import supabase from '../supabaseClient';
 
 function CreateAccount() {
   const [email, setEmail] = useState('');
@@ -20,16 +21,19 @@ function CreateAccount() {
 
     try {
       // Step 1: Create the user using Supabase Auth
-      const { user, error: signUpError } = await signUpUser(email, password);
+      const { data, error, message } = await signUpUser(email, password);
 
-      if (signUpError) {
-        setError(signUpError.message);
+      if (error) {
+        console.error('SignUp Error: ', error);
+        setError(error.message);
         return;
       }
 
+      console.log('Here 1: ', data);
+      
       // Step 2: Insert the user profile into the profiles table
-      const { error: profileError } = await insertUserProfile(user.id, 'customer', name);
-
+      const { error: profileError } = await insertUserProfile(data.user.id, 'customer', name);
+      console.log('Profile error: ', profileError);
       if (profileError) {
         setError(profileError.message);
         return;
@@ -37,6 +41,7 @@ function CreateAccount() {
 
       // Step 3: Show success message
       setSuccessMessage('Account created successfully! Please check your email to verify.');
+      
     } catch (err) {
       setError('Something went wrong. Please try again.');
     }
