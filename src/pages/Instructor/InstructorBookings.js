@@ -28,14 +28,15 @@ function InstructorBookings() {
         `
           id, 
           lesson_date, 
-          lesson_type, 
+          lesson_type,
+          lesson_time,
           profiles:instructor_id(name),
           locations(name)
         `
       )
       .eq('instructor_id', instructorId)
       .order('lesson_date', { ascending: true });
-
+console.log('data: ', data);
     if (error) {
       setError(error.message);
     } else {
@@ -71,10 +72,10 @@ function InstructorBookings() {
             <thead>
               <tr className="bg-gray-200 text-left">
                 <th className="px-4 py-2">Lesson Date</th>
+                <th className="px-4 py-2">Lesson Time</th>
                 <th className="px-4 py-2">Lesson Type</th>
                 <th className="px-4 py-2">Location</th>
                 <th className="px-4 py-2">Customer Name</th>
-                <th className="px-4 py-2">Customer Email</th>
               </tr>
             </thead>
             <tbody>
@@ -83,10 +84,10 @@ function InstructorBookings() {
                   <td className="px-4 py-2">
                     {new Date(booking.lesson_date).toLocaleString()}
                   </td>
+                  <td className="px-4 py-2">{booking.lesson_time}</td>
                   <td className="px-4 py-2">{booking.lesson_type}</td>
-                  <td className="px-4 py-2">{booking.location?.name}</td>
-                  <td className="px-4 py-2">{booking.profiles?.full_name}</td>
-                  <td className="px-4 py-2">{booking.profiles?.email}</td>
+                  <td className="px-4 py-2">{booking.locations?.name}</td>
+                  <td className="px-4 py-2">{booking.profiles?.name}</td>
                 </tr>
               ))}
             </tbody>

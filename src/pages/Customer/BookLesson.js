@@ -97,9 +97,6 @@ function BookLesson() {
   };
 
   const isTimeBooked = (time) => {
-    console.log('time: ', time);
-    console.log('instructor bookings: ', instructorBookings);
-    console.log('lessonTime: ', lessonTime);
     return instructorBookings.some((booking) => booking.lesson_time === time);
   };
 
