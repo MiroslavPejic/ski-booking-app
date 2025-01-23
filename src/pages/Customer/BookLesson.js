@@ -97,6 +97,9 @@ function BookLesson() {
   };
 
   const isTimeBooked = (time) => {
+    console.log('time: ', time);
+    console.log('instructor bookings: ', instructorBookings);
+    console.log('lessonTime: ', lessonTime);
     return instructorBookings.some((booking) => booking.lesson_time === time);
   };
 
@@ -175,11 +178,11 @@ function BookLesson() {
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Lesson Time</label>
               <div className="grid grid-cols-3 gap-2">
-                {['9:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00'].map((time) => (
+                {['09:00:00', '10:00:00', '11:00:00', '12:00:00', '13:00:00', '14:00:00', '15:00:00', '16:00:00', '17:00:00'].map((time) => (
                   <button
                     key={time}
                     type="button"
-                    className={`w-full p-3 border ${lessonTime === time ? 'bg-blue-500 text-white' : ''} ${isTimeBooked(time) ? 'bg-gray-500 text-white cursor-not-allowed' : 'bg-green-500 text-white'} border-gray-300 rounded`}
+                    className={`w-full p-3 border ${isTimeBooked(time) ? 'bg-gray-500 text-white cursor-not-allowed' : lessonTime === time ? 'bg-blue-500 text-white' : 'bg-green-500 text-white'} border-gray-300 rounded`}
                     onClick={() => !isTimeBooked(time) && setLessonTime(time)}
                     disabled={isTimeBooked(time)} // Disable button if time is already booked
                   >

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import supabase from '../../supabaseClient';
-import AdminDashboard from './AdminDashboard';
-import InstructorDashboard from './InstructorDashboard';
+import AdminDashboard from '../Admin/AdminDashboard';
+import InstructorDashboard from '../Instructor/InstructorDashboard';
 import CustomerDashboard from '../Customer/CustomerDashboard';
 
 function Dashboard() {

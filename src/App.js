@@ -13,6 +13,9 @@ import NavigationBar from './components/NavigationBar';
 import AdminUsers from './pages/Admin/AdminUsers';
 import AdminBookings from './pages/Admin/AdminBookings';
 
+// Instructor
+import InstructorBookings from './pages/Instructor/InstructorBookings';
+
 // Customer
 import BookLesson from './pages/Customer/BookLesson';
 import UserBookings from './pages/Customer/Bookings';
@@ -31,6 +34,9 @@ function App() {
           <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/admin/users" element={<AdminUsers/>} />
           <Route path="/admin/bookings" element={<AdminBookings/>} />
+
+          {/* Routes for an Instructor */}
+          <Route path="/instructor/bookings" element={<InstructorBookings />} />
 
           {/* Routes for customer bookings */}
           <Route path="/profile/book-lesson" element={<BookLesson />} />

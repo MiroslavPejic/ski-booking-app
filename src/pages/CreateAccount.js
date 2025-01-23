@@ -41,7 +41,6 @@ function CreateAccount() {
 
       // Step 3: Show success message
       setSuccessMessage('Account created successfully! Please check your email to verify.');
-      
     } catch (err) {
       setError('Something went wrong. Please try again.');
     }
