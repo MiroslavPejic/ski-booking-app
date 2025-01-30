@@ -5,5 +5,6 @@ CREATE TABLE ski_lessons (
   lesson_time TIME NOT NULL,  -- New column for the time of the lesson
   lesson_type TEXT NOT NULL,
   location_id INT REFERENCES locations(id) ON DELETE SET NULL,
-  instructor_id UUID REFERENCES profiles(id) ON DELETE SET NULL
+  instructor_id UUID REFERENCES profiles(id) ON DELETE SET NULL,
+  deleted BOOLEAN DEFAULT FALSE
 );
