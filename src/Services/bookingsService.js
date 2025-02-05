@@ -62,7 +62,7 @@ export const fetchInstructorBookings = async (instructorId, date) => {
   
     const { data, error } = await supabase
       .from('ski_lessons')
-      .select('lesson_time')
+      .select('lesson_time, lesson_duration')
       .eq('instructor_id', instructorId)
       .eq('lesson_date', formattedDate);
   
@@ -74,7 +74,7 @@ export const fetchInstructorBookings = async (instructorId, date) => {
 };
 
 // Create a new booking
-export const createBooking = async (userId, lessonDate, lessonTime, lessonType, location, selectedInstructor) => {
+export const createBooking = async (userId, lessonDate, lessonTime, lessonDuration, lessonType, location, selectedInstructor) => {
     const { data, error } = await supabase
       .from('ski_lessons')
       .insert([
@@ -82,6 +82,7 @@ export const createBooking = async (userId, lessonDate, lessonTime, lessonType, 
           user_id: userId,
           lesson_date: lessonDate,
           lesson_time: lessonTime,
+          lesson_duration: lessonDuration,
           lesson_type: lessonType,
           location_id: location,
           instructor_id: selectedInstructor,
