@@ -27,28 +27,30 @@ function App() {
   return (
     <AppProvider>
       <Router>
-        <NavigationBar />
-        <div> {/* Padding to avoid overlap with fixed navbar */}
-          <Routes>
-            <Route path="/" element={<LandingPage />} />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/create-account" element={<CreateAccount />} />
-            <Route path="/forgot-password" element={<ForgotPassword />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/profile" element={<ProfilePage/>} />
-            <Route path="/admin/users" element={<AdminUsers/>} />
-            <Route path="/admin/bookings" element={<AdminBookings/>} />
+        <div id="root">
+          <NavigationBar />
+          <main className="main-content">
+            <Routes>
+              <Route path="/" element={<LandingPage />} />
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/create-account" element={<CreateAccount />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/admin/users" element={<AdminUsers />} />
+              <Route path="/admin/bookings" element={<AdminBookings />} />
 
-            {/* Routes for an Instructor */}
-            <Route path="/instructor/bookings" element={<InstructorBookings />} />
+              {/* Routes for an Instructor */}
+              <Route path="/instructor/bookings" element={<InstructorBookings />} />
 
-            {/* Routes for customer bookings */}
-            <Route path="/profile/book-lesson" element={<BookLesson />} />
-            <Route path="/profile/details" element={<ProfilePage/>} />
-            <Route path="/profile/bookings" element={<UserBookings />} />
-          </Routes>
+              {/* Routes for customer bookings */}
+              <Route path="/profile/book-lesson" element={<BookLesson />} />
+              <Route path="/profile/details" element={<ProfilePage />} />
+              <Route path="/profile/bookings" element={<UserBookings />} />
+            </Routes>
+          </main>
+          <Footer />
         </div>
-        <Footer />
       </Router>
     </AppProvider>
   );
