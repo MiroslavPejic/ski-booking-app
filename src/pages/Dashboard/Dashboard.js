@@ -1,53 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import supabase from '../../supabaseClient';
+import React, { useContext } from 'react';
 import AdminDashboard from '../Admin/AdminDashboard';
 import InstructorDashboard from '../Instructor/InstructorDashboard';
 import CustomerDashboard from '../Customer/CustomerDashboard';
 
+import { AppContext } from '../AppContext';
+
 function Dashboard() {
-  const [user, setUser] = useState(null);
-  const [role, setRole] = useState('');
-
-  const fetchUserRole = async (userId) => {
-    const { data, error } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', userId)
-      .single();
-
-    if (error) {
-      console.log('Error: ', error);
-    } else {
-      setRole(data?.role || 'customer');
-    }
-  };
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      setUser(session?.user);
-    };
-
-    fetchSession();
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      setUser(session?.user);
-    });
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      fetchUserRole(user.id);
-    }
-  }, [user]);
+  const { userRole } = useContext(AppContext);
 
   return (
     <div className="container mx-auto p-6 pt-24">
-      {user ? (
+      {userRole ? (
         <>
-          {role === 'admin' && <AdminDashboard />}
-          {role === 'instructor' && <InstructorDashboard />}
-          {role === 'customer' && <CustomerDashboard />}
+          {userRole === 'admin' && <AdminDashboard />}
+          {userRole === 'instructor' && <InstructorDashboard />}
+          {userRole === 'customer' && <CustomerDashboard />}
         </>
       ) : (
         <p>Please log in to view and make bookings.</p>

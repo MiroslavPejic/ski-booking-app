@@ -10,6 +10,8 @@ import ProfilePage from './pages/ProfilePage'
 import NavigationBar from './components/NavigationBar';
 import Footer from './components/Footer';
 
+import { AppProvider } from './pages/AppContext';
+
 // Admin
 import AdminUsers from './pages/Admin/AdminUsers';
 import AdminBookings from './pages/Admin/AdminBookings';
@@ -23,6 +25,7 @@ import UserBookings from './pages/Customer/Bookings';
 
 function App() {
   return (
+<<<<<<< HEAD
   
     <Router>
       <NavigationBar />
@@ -36,10 +39,26 @@ function App() {
           <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/admin/users" element={<AdminUsers/>} />
           <Route path="/admin/bookings" element={<AdminBookings/>} />
+=======
+    <AppProvider>
+      <Router>
+        <NavigationBar />
+        <div> {/* Padding to avoid overlap with fixed navbar */}
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/create-account" element={<CreateAccount />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/profile" element={<ProfilePage/>} />
+            <Route path="/admin/users" element={<AdminUsers/>} />
+            <Route path="/admin/bookings" element={<AdminBookings/>} />
+>>>>>>> 20459f2872e1ba1b890232ce5c4d8cad22d9f9a6
 
-          {/* Routes for an Instructor */}
-          <Route path="/instructor/bookings" element={<InstructorBookings />} />
+            {/* Routes for an Instructor */}
+            <Route path="/instructor/bookings" element={<InstructorBookings />} />
 
+<<<<<<< HEAD
           {/* Routes for customer bookings */}
           <Route path="/profile/book-lesson" element={<BookLesson />} />
           <Route path="/profile/details" element={<ProfilePage/>} />
@@ -50,6 +69,16 @@ function App() {
       <Footer />
     </Router>
     
+=======
+            {/* Routes for customer bookings */}
+            <Route path="/profile/book-lesson" element={<BookLesson />} />
+            <Route path="/profile/details" element={<ProfilePage/>} />
+            <Route path="/profile/bookings" element={<UserBookings />} />
+          </Routes>
+        </div>
+      </Router>
+    </AppProvider>
+>>>>>>> 20459f2872e1ba1b890232ce5c4d8cad22d9f9a6
   );
 }
 
