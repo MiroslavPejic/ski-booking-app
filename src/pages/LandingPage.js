@@ -103,7 +103,7 @@ function LandingPage() {
                       href="/dashboard"
                       className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300"
                     >
-                      Go to Dashboard
+                      Go to Dashboard XXXXXX
                     </a>
                   </div>
                 )}

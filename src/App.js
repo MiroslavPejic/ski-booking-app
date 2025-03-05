@@ -8,6 +8,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import Dashboard from './pages/Dashboard/Dashboard';
 import ProfilePage from './pages/ProfilePage'
 import NavigationBar from './components/NavigationBar';
+import Footer from './components/Footer';
 
 // Admin
 import AdminUsers from './pages/Admin/AdminUsers';
@@ -22,6 +23,7 @@ import UserBookings from './pages/Customer/Bookings';
 
 function App() {
   return (
+  
     <Router>
       <NavigationBar />
       <div> {/* Padding to avoid overlap with fixed navbar */}
@@ -43,8 +45,11 @@ function App() {
           <Route path="/profile/details" element={<ProfilePage/>} />
           <Route path="/profile/bookings" element={<UserBookings />} />
         </Routes>
+        
       </div>
+      <Footer />
     </Router>
+    
   );
 }
 
