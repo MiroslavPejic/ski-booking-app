@@ -8,13 +8,23 @@ import backgroundImage3 from '../assets/ski_background_3.jpg';
 function LandingPage() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
-  const [currentSection, setCurrentSection] = useState(0);
 
   const sections = [
-    { id: 'section1', backgroundImage: backgroundImage1, title: 'Welcome to Ski Manager' },
-    { id: 'section2', backgroundImage: backgroundImage2, title: 'Manage Your Ski Resort Seamlessly' },
-    { id: 'section3', backgroundImage: backgroundImage3, title: 'Get Started Today!' },
+    { id: 'section1', backgroundImage: backgroundImage1, title: 'Welcome to Ski Manager', subtitle: 'Streamline your ski resort operations' },
+    { id: 'section2', backgroundImage: backgroundImage2, title: 'What we do', subtitle: 'Learn to ski with ease at top resorts' },
+    { id: 'section3', backgroundImage: backgroundImage3, title: 'Get Started Today!', subtitle: 'Sign up and transform your operations' },
   ];
+
+  const sectionTwoText = `
+    Ski with Ease ski school Morzine/Avoriaz & Les Gets in the PDS (Portes du Soleil) 
+    and now Meribel in the 3 Vallées offers easy-learning private Ski lessons.
+
+    Our 4 selected resorts in the heart of the Portes du Soleil and 3 Vallées Meribel 
+    are perfect for learning and improving skills for all ages and abilities.
+
+    The ski school name is our mission statement. Our English-speaking ski instructors 
+    use fun and effective easy-learning techniques. You’ll learn how to “get the most without using the most”.
+  `;
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -33,35 +43,7 @@ function LandingPage() {
         setUser(null);
       }
     });
-  }, [])
-
-  useEffect(() => {
-    const handleScroll = (event) => {
-      event.preventDefault(); // Prevent default scroll behavior
-
-      const delta = event.deltaY || event.detail || event.wheelDelta;
-      if (delta > 0) {
-        // Scroll down
-        setCurrentSection((prev) => Math.min(prev + 1, sections.length - 1));
-      } else if (delta < 0) {
-        // Scroll up
-        setCurrentSection((prev) => Math.max(prev - 1, 0));
-      }
-    };
-
-    window.addEventListener('wheel', handleScroll, { passive: false });
-
-    return () => {
-      window.removeEventListener('wheel', handleScroll);
-    };
-  }, [sections.length]);
-
-  useEffect(() => {
-    const section = document.getElementById(sections[currentSection].id);
-    if (section) {
-      section.scrollIntoView({ behavior: 'smooth' });
-    }
-  }, [currentSection]);
+  }, []);
 
   return (
     <div>
@@ -69,57 +51,41 @@ function LandingPage() {
         <div
           key={index}
           id={section.id}
-          className="flex items-center justify-center min-h-screen bg-cover bg-center text-white"
+          className="relative flex items-center justify-center min-h-screen bg-cover bg-center text-white"
           style={{ backgroundImage: `url(${section.backgroundImage})` }}
         >
-          <div className="bg-black bg-opacity-50 p-10 rounded-lg shadow-lg max-w-3xl text-center">
-            <h1 className="text-4xl font-bold mb-4">{section.title}</h1>
-            {index === 0 && (
-              <>
-                <p className="text-lg mb-6">
-                  Streamline your ski resort operations with our platform. From managing reservations and 
-                  tracking customer details to optimizing daily operations, our tools make it easier for 
-                  you to focus on delivering an exceptional experience on the slopes.
-                </p>
-                {!user && (
-                  <div className="flex justify-center gap-4">
-                    <a
-                      href="/login"
-                      className="bg-primary text-white py-3 px-6 rounded-lg hover:bg-hover transition duration-300"
-                    >
-                      Login
-                    </a>
-                    <a
-                      href="/create-account"
-                      className="bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-300"
-                    >
-                      Create Account
-                    </a>
-                  </div>
-                )}
-                {user && (
-                  <div className="mt-4">
-                    <a
-                      href="/dashboard"
-                      className="bg-primary text-white py-3 px-6 rounded-lg hover:bg-hover transition duration-300"
-                    >
-                      Go to Dashboard
-                    </a>
-                  </div>
-                )}
-              </>
-            )}
+          <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+          <div className="relative z-10 p-10 text-center max-w-2xl mx-auto">
+            <h1 className="text-5xl font-bold mb-6">{section.title}</h1>
+            <p className="text-lg mb-6">{section.subtitle}</p>
             {index === 1 && (
-              <p className="text-lg mb-6">
-                Take control of your operations with ease. Our tools allow you to focus on what 
-                matters most—providing the best experience for your guests.
-              </p>
+              <p className="text-lg text-white mt-4">{sectionTwoText}</p>
             )}
-            {index === 2 && (
-              <p className="text-lg mb-6">
-                Sign up now and experience how Ski Manager can transform your operations. Whether 
-                you're running a small resort or managing multiple locations, we've got you covered.
-              </p>
+            {!user && index === 0 && (
+              <div className="flex justify-center gap-6 mt-6">
+                <a
+                  href="/login"
+                  className="bg-primary text-white py-3 px-6 rounded-lg hover:bg-hover transition duration-300"
+                >
+                  Login
+                </a>
+                <a
+                  href="/create-account"
+                  className="bg-green-600 text-white py-3 px-6 rounded-lg hover:bg-green-700 transition duration-300"
+                >
+                  Create Account
+                </a>
+              </div>
+            )}
+            {user && (
+              <div className="mt-4">
+                <a
+                  href="/dashboard"
+                  className="bg-primary text-white py-3 px-6 rounded-lg hover:bg-hover transition duration-300"
+                >
+                  Go to Dashboard
+                </a>
+              </div>
             )}
           </div>
         </div>
