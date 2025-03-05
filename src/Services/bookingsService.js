@@ -73,6 +73,18 @@ export const fetchInstructorBookings = async (instructorId, date) => {
     return data || [];
 };
 
+export const fetchLessonTypes = async () => {
+  const { data, error } = await supabase
+      .from('lesson_types')
+      .select('*')
+  
+    if (error) {
+      throw new Error(error.message);
+    }
+    
+    return data || [];
+}
+
 // Create a new booking
 export const createBooking = async (userId, lessonDate, lessonTime, lessonDuration, lessonType, location, selectedInstructor) => {
     const { data, error } = await supabase

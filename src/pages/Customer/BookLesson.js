@@ -9,10 +9,11 @@ function BookLesson() {
   const [lessonDate, setLessonDate] = useState(null);
   const [lessonTime, setLessonTime] = useState(null);
   const [lessonDuration, setLessonDuration] = useState(1); // 1, 2, or 3 hours
-  const [lessonType, setLessonType] = useState('Beginner');
   const [location, setLocation] = useState('');
   const [selectedInstructor, setSelectedInstructor] = useState(null);
   const [locations, setLocations] = useState([]);
+  const [lessonTypes, setLessonTypes] = useState([]);
+  const [lessonType, setLessonType] = useState(null);
   const [instructors, setInstructors] = useState([]);
   const [instructorBookings, setInstructorBookings] = useState([]);
   const [notification, setNotification] = useState({ visible: false, message: '', isSuccess: true });
@@ -20,6 +21,7 @@ function BookLesson() {
   useEffect(() => {
     fetchSession();
     fetchLocations();
+    fetchLessonTypes();
     supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user);
     });
@@ -55,6 +57,15 @@ function BookLesson() {
     }
   };
 
+  const fetchLessonTypes = async () => {
+    try {
+      const data = await bookingService.fetchLessonTypes();
+      setLessonTypes(data);
+    } catch (error) {
+      console.error('Error fetching lesson types: ', error.message);
+    }
+  };
+
   const fetchInstructors = async (locationId) => {
     try {
       const data = await bookingService.fetchInstructors(locationId);
@@ -86,7 +97,7 @@ function BookLesson() {
       setLessonDate(null);
       setLessonTime(null);
       setLessonDuration(1);
-      setLessonType('Beginner');
+      setLessonType(null);
       setLocation('');
       setSelectedInstructor(null);
       setNotification({ visible: true, message: 'Booking created successfully!', isSuccess: true });
@@ -155,8 +166,21 @@ function BookLesson() {
             </select>
           </div>
 
-          {/* Instructor */}
+          {/* lesson type */}
           {location && (
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700">Lesson Type</label>
+              <select value={lessonType} onChange={(e) => setLessonType(e.target.value)} className="w-full p-3 border border-gray-300 rounded" required>
+                <option value="">Select lesson type</option>
+                {lessonTypes.map((loc) => (
+                  <option key={loc.id} value={loc.id}>{loc.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {/* Instructor */}
+          {lessonType && (
             <div className="mb-4">
               <label className="block text-sm font-medium text-gray-700">Instructor</label>
               <select value={selectedInstructor} onChange={(e) => setSelectedInstructor(e.target.value)} className="w-full p-3 border border-gray-300 rounded" required>
