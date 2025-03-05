@@ -253,7 +253,7 @@ function BookLesson() {
             type="submit"
             className={`py-2 px-6 rounded ${
               lessonDate && lessonTime && lessonDuration && lessonType && location && selectedInstructor
-                ? 'bg-blue-600 text-white'
+                ? 'bg-primary text-white'
                 : 'bg-gray-400 text-gray-700 cursor-not-allowed'
             }`}
             disabled={!(lessonDate && lessonTime && lessonDuration && lessonType && location && selectedInstructor)}

@@ -8,7 +8,7 @@ function CustomerDashboard() {
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-center">
         {/* Admin-specific buttons */}
-        <Link to="/profile/book-lesson" className="flex justify-center items-center w-full h-48 bg-blue-600 text-white rounded-lg shadow-lg text-xl font-semibold hover:bg-blue-700 transition duration-300">
+        <Link to="/profile/book-lesson" className="flex justify-center items-center w-full h-48 bg-primary text-white rounded-lg shadow-lg text-xl font-semibold bg-hover transition duration-300">
           Book lesson
         </Link>
         

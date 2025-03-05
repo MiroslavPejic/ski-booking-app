@@ -85,7 +85,7 @@ function LandingPage() {
                   <div className="flex justify-center gap-4">
                     <a
                       href="/login"
-                      className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300"
+                      className="bg-primary text-white py-3 px-6 rounded-lg hover:bg-hover transition duration-300"
                     >
                       Login
                     </a>
@@ -101,7 +101,7 @@ function LandingPage() {
                   <div className="mt-4">
                     <a
                       href="/dashboard"
-                      className="bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300"
+                      className="bg-primary text-white py-3 px-6 rounded-lg hover:bg-hover transition duration-300"
                     >
                       Go to Dashboard
                     </a>

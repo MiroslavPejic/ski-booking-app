@@ -41,7 +41,7 @@ function PaginatedBookings({ bookings, itemsPerPage, title }) {
         <button
           onClick={handlePrevious}
           disabled={currentPage === 1}
-          className={`py-1 px-3 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 text-white'}`}
+          className={`py-1 px-3 rounded ${currentPage === 1 ? 'bg-gray-300 cursor-not-allowed' : 'bg-primary text-white'}`}
         >
           Previous
         </button>
@@ -49,7 +49,7 @@ function PaginatedBookings({ bookings, itemsPerPage, title }) {
         <button
           onClick={handleNext}
           disabled={currentPage === totalPages}
-          className={`py-1 px-3 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 text-white'}`}
+          className={`py-1 px-3 rounded ${currentPage === totalPages ? 'bg-gray-300 cursor-not-allowed' : 'bg-primary text-white'}`}
         >
           Next
         </button>

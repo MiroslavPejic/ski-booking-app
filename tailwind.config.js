@@ -4,7 +4,12 @@ module.exports = {
     './public/index.html', // Include the HTML file
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "#2c3e50",
+        hover: "#34495e"
+      }
+    },
   },
   plugins: [],
 };

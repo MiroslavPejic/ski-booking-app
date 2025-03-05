@@ -36,7 +36,7 @@ function NavigationBar() {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-gradient-to-r from-blue-600 to-blue-800 shadow-lg z-50 flex items-center justify-between px-8 py-4 text-white">
+    <nav className="fixed top-0 left-0 right-0 bg-primary shadow-lg z-50 flex items-center justify-between px-8 py-4 text-white">
       <div className="flex items-center justify-between w-full md:w-auto">
         <div className="text-2xl font-bold flex items-center">
           <span className="mr-2">
@@ -95,7 +95,7 @@ function NavigationBar() {
           <>
             <Link
               to="/dashboard"
-              className="hover:bg-blue-700 px-4 py-2 rounded transition duration-300 block md:inline"
+              className="bg-hover px-4 py-2 rounded transition duration-300 block md:inline"
             >
               Dashboard
             </Link>

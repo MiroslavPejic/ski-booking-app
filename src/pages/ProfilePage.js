@@ -37,7 +37,7 @@ function ProfilePage() {
         {user ? (
           <>
             <div className="text-center mb-6">
-              <div className="w-24 h-24 rounded-full bg-blue-600 mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
+              <div className="w-24 h-24 rounded-full bg-primary mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold">
                 {user?.email?.[0]?.toUpperCase() || 'U'}
               </div>
               <h1 className="text-2xl font-bold text-blue-700">{user.email}</h1>
